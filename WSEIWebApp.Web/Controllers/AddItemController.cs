@@ -4,11 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WSEIWebApp.Web.Models;
+using WSEIWebApp.Web.Entities;
+using WSEIWebApp.Web.Database;
 
 namespace WSEIWebApp.Web.Controllers
 {
     public class AddItemController : Controller
     {
+        private readonly ExchangesDbContext _dbContext;
+        public AddItemController(ExchangesDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+        public IActionResult ShowItems()
+        {
+            var items = _dbContext.Items.ToArray<ItemEntity>();
+
+            return View("~/Views/Items/ShowItems.cshtml", items);
+        }
         [HttpGet]
         public IActionResult AddItem()
         {
@@ -17,7 +30,7 @@ namespace WSEIWebApp.Web.Controllers
 
         [HttpPost]
         public IActionResult AddItem(ItemModel item)
-        {          
+        {
             return RedirectToAction("AddConfirmation");
         }
 
